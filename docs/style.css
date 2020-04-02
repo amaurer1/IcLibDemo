@@ -1,0 +1,40 @@
+body
+{
+   font-family: Arial;
+   font-size: medium;
+   line-height: 150%;
+   background-color: Window;
+   color: WindowText;
+}
+a 
+{
+   color: WindowText;
+}
+a:link, a:visited, a:active, a:hover
+{
+   text-decoration: underline;
+}
+ul
+{
+   padding-left: 20px;
+   margin-left: 0px;
+}
+table
+{
+   border-collapse: collapse;
+   margin-top: 2px;
+}
+td
+{
+   padding: 5px 5px;
+   vertical-align: middle;
+   border: 1px solid WindowText;
+}
+hr
+{
+   border-top: 1px solid WindowText;
+}
+figure
+{
+   margin: 0px 10px 10px 0px;
+}
