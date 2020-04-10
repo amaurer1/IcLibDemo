@@ -1,0 +1,490 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <meta charset="utf-8" />
+   <title>Interpolation with Finite Splines</title>
+   <link rel="StyleSheet" type="text/css" href="style.css" />
+</head>
+<body>
+   <h1>
+      Interpolation with Finite Splines
+   </h1>
+   <p>
+      Interpolation is the determination of a mathematical function which passes through a set of given data points.
+      This function can be used to calculate the intermediate values between the data points.
+      Frequently used interpolation curves types like line segments or cubic splines are supplemented here by a new type: <b>the finite splines</b>.
+      In the mathematical section, I will show an iterative algorithm which specifies the coefficients of the curves, as well as the formula for the calculation of the function value.
+      These algorithms are available in a library.
+      The usage of this library is demonstrated in the open source project IcLibDemo which is hosted on GitHub.
+   </p>
+   <div class="contents">
+      <ul>
+         <li>Contents</li>
+         <li><a href="#Line Segment Interpolation">Line Segment Interpolation</a></li>
+         <li><a href="#Cubic Spline Interpolation">Cubic Spline Interpolation</a></li>
+         <li><a href="#Finite Spline Interpolation">Finite Spline Interpolation</a></li>
+         <li><a href="#Additional Features">Additional Features</a></li>
+         <li><a href="#Mathematical Section">Mathematical Section</a></li>
+         <li><a href="#Usage Examples">Usage Examples</a></li>
+         <li><a href="#Project">Project</a></li>
+      </ul>
+   </div>
+   <h2 id="Line Segment Interpolation">
+      Line Segment Interpolation
+   </h2>
+   <p>
+      This is the simplest form of interpolation.
+      The data points are connected with straight lines.
+      In some cases the line segment interpolation is good enough, in other cases the angular transitions at the data points are undesirable.
+   </p>
+   <p>
+      <figure style="float: left;">
+         <object data="IcLibDemo/Line_Segment_Interpolation_1.svg" name="Line segment interpolation 1" title="Line segment interpolation 1"></object>
+         <figcaption>Fig. 1: Line segment interpolation 1</figcaption>
+      </figure>
+      <figure style="float: left;">
+         <object data="IcLibDemo/Line_Segment_Interpolation_2.svg" title="Line segment interpolation 2"></object>
+         <figcaption>Fig. 2: Line segment interpolation 2</figcaption>
+      </figure>
+      <figure>
+         <object data="IcLibDemo/Line_Segment_Interpolation_3.svg" title="Line segment interpolation 3"></object>
+         <figcaption>Fig. 3: Line segment interpolation 3</figcaption>
+      </figure>
+   </p>
+   <h2 id="Cubic Spline Interpolation">
+      Cubic Spline Interpolation
+   </h2>
+   <p>
+      Cubic splines are smooth by all means.
+      In certain cases this feature leads to possibly unwanted overshooting.
+   </p>
+   <p>
+      <figure style="float: left;">
+         <object data="IcLibDemo/Cubic_Spline_Interpolation_1.svg" title="Cubic spline interpolation 1"></object>
+         <figcaption>Fig. 4: Cubic spline interpolation 1</figcaption>
+      </figure>
+      <figure style="float: left;">
+         <object data="IcLibDemo/Cubic_Spline_Interpolation_2.svg" title="Cubic spline interpolation 2"></object>
+         <figcaption>Fig. 5: Cubic spline interpolation 2</figcaption>
+      </figure>
+      <figure>
+         <object data="IcLibDemo/Cubic_Spline_Interpolation_3.svg" title="Cubic spline interpolation 3"></object>
+         <figcaption>Fig. 6: Cubic spline interpolation 3</figcaption>
+      </figure>
+   </p>
+   <h2 id="Finite Spline Interpolation">
+      Finite Spline Interpolation
+   </h2>
+   <p>
+      Finite splines have the characteristic feature to be as smooth as possible, as long as their curve segments take course inside the vertical range of their two limiting data points.
+      These curves take an intermediate position between line segments and cubic splines.
+      Finite splines are ideal for the definition of smooth curves which have to lie strictly within a confined area.
+   </p>
+   <p>
+      <figure style="float: left;">
+         <object data="IcLibDemo/Finite_Spline_Interpolation_1.svg" title="Finite spline interpolation 1"></object>
+         <figcaption>Fig. 7: Finite spline interpolation 1</figcaption>
+      </figure>
+      <figure style="float: left;">
+         <object data="IcLibDemo/Finite_Spline_Interpolation_2.svg" title="Finite spline interpolation 2"></object>
+         <figcaption>Fig. 8: Finite spline interpolation 2</figcaption>
+      </figure>
+      <figure>
+         <object data="IcLibDemo/Finite_Spline_Interpolation_3.svg" title="Finite spline interpolation 3"></object>
+         <figcaption>Fig. 9: Finite spline interpolation 3</figcaption>
+      </figure>
+   </p>
+   <h2 id="Additional Features">
+      Additional Features
+   </h2>
+   <p>
+      The transition at each data point can be defined as either smooth or angular.
+      This feature can be used to define additional tips or angles at any data point (Figures 10 and 11).
+      If two data points share the same horizontal position, the curve is splitted up (Figure 12).
+   </p>
+   <p>
+      <figure style="float: left;">
+         <object data="IcLibDemo/Smooth_Transition.svg" title="Smooth transition"></object>
+         <figcaption>Fig. 10: Smooth transition</figcaption>
+      </figure>
+      <figure style="float: left;">
+         <object data="IcLibDemo/Angular_Transition.svg" title="Angular transition"></object>
+         <figcaption>Fig. 11: Angular transition</figcaption>
+      </figure>
+      <figure>
+         <object data="IcLibDemo/Splitted_Curve.svg" title="Splitted curve"></object>
+         <figcaption>Fig. 12: Splitted curve</figcaption>
+      </figure>
+   </p>
+   <h2 id="Mathematical Section">
+      Mathematical Section
+   </h2>
+   <p>
+      The mathematical formulas in this section use position vectors (lower case) which correspond to the points in the figures (upper case).
+      <i>O</i> denotes the point of origin.
+      That is:
+   </p>
+   <p>
+      <object data="IcLibDemo/Formula_A01.svg"></object>
+   </p>
+   <p>
+      The vectors consist of the components <i>x</i> and <i>y</i>:
+   </p>
+   <p>
+      <object data="IcLibDemo/Formula_A02.svg"></object>
+   </p>
+   <h3>
+      The Curve Segment
+   </h3>
+   <p>
+      The curve segment joins two adjacent data points.
+      A curve which contains <i>n</i> data points, therefore consists of <i>n - 1</i> curve segments.
+      Mathematically, these segments are explicit cubic Bézier functions.
+      The course of this curves is determined by four control points.
+      The two outer control points form the beginning and the end of the curve.
+      The two inner control points define the curvature and usually do not touch the curve.
+      The following paragraphs show the development of the curve segment starting from the well-known parametric Bézier curve.
+   </p>
+   <p>
+      Usually Bézier curves are applied in their parametric form.
+      In this case, the coordinates of the curve are calculated in dependence on a variable <i>t</i> using two different formulas, one for the <i>x</i> and the other for the <i>y</i> coordinate.
+      This is the mathematical definition:
+   </p>
+   <p>
+      <object data="IcLibDemo/Formula_B01.svg"></object>
+   </p>
+   <p>
+      The Interactive Figure 1 shows the parametric Bézier curve, you can move all the control points in any direction.
+      The curve can be set in any part of the area, it can also be twisted or crossed:
+   </p>
+   <p>
+      <figure>
+         <object data="IcLibDemo/Parametric_Bézier_Function.svg" title="Parametric Bézier function"></object>
+         <figcaption>
+            Interactive Fig. 1: Parametric Bézier function
+            <noscript style="color:red;"><br />The Interactive Figure requires JavaScript!</noscript>
+         </figcaption>
+      </figure>
+   </p>
+   <p>
+      Now we simplify the parametric function to an explicit function by just leaving out the first part:
+   </p>
+   <p>
+      <object data="IcLibDemo/Formula_B02.svg"></object>
+   </p>
+   <p>
+      The Interactive Figure 2 shows the explicit Bézier curve.
+      You can only move the control points in vertical direction:
+   </p>
+   <p>
+      <figure>
+         <object data="IcLibDemo/Explicit_Bézier_Function.svg" title="Explicit Bézier function"></object>
+         <figcaption>
+            Interactive Fig. 2: Explicit Bézier function
+            <noscript style="color:red;"><br />The Interactive Figure requires JavaScript!</noscript>
+         </figcaption>
+      </figure>
+   </p>
+   <p>
+      Finally we want to be able to set the explicit Bézier function above any range of the x axis, as long as <i>dx > ax</i>.
+      For that purpose we have to map the variable <i>x</i> into the range defined by the first and the last control point.
+      The following modulation is applied to the variable <i>x</i> before it's used in the explicit Bézier function:
+   </p>
+   <p>
+      <object data="IcLibDemo/Formula_B03.svg"></object>
+   </p>
+   <p>
+      The Interactive Figure 3 shows the final curve segment.
+      You can move the outer control points in any direction, but you can only move the inner control points in vertical direction.
+      The horizontal positions of the inner control points are dependent on the horizontal positions of the outer control points:
+   </p>
+   <p>
+      <figure>
+         <object data="IcLibDemo/Final_Curve_Segment.svg" title="Final curve segment"></object>
+         <figcaption>
+            Interactive Fig. 3: Final curve segment
+            <noscript style="color:red;"><br />The Interactive Figure requires JavaScript!</noscript>
+         </figcaption>
+      </figure>
+   </p>
+   <h3>
+      Control Point Initialization
+   </h3>
+   <p>
+      First of all, we have to create the necessary number of curve segments and pre-initialize their control points.
+      The outer control points correspond to the data points, while the inner control points are equally distributed among them.
+      This starting position equals the line segment interpolation.
+      At this stage, the outer control points and the horizontal positions of the inner control points are already definitively fixed.
+   </p>
+   <p>
+      If we want smooth transitions, we have to set the vertical positions of the inner control points, so they form tangents at the respective data point transitions.
+      This is the task of the iterative adaption algorithm (Interactive Figure 4).
+   </p>
+   <p>
+      <figure>
+         <object data="IcLibDemo/Iterative_Adaption_Algorithm.svg" title="Iterative adaption algorithm"></object>
+         <figcaption>
+            Interactive Fig. 4: Iterative adaption algorithm
+            <noscript style="color:red;"><br />The Interactive Figure requires JavaScript!</noscript>
+         </figcaption>
+      </figure>
+   </p>
+   <ul style="list-style-type:square;">
+      <li style="list-style-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAIAAAC0tAIdAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAdSURBVChTY/zPQAJggtLEgVHVmGBUNSYgRTUDAwDZjQEdiBMFlwAAAABJRU5ErkJggg==)">Data point with smooth definition</li>
+      <li style="list-style-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAIAAAC0tAIdAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAeSURBVChTY2T4z0A8YILSxIFR1ZhgVDUmIEU1AwMA2I4BHchegT0AAAAASUVORK5CYII=);">Data point with angular definition</li>
+      <li style="list-style-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAIAAAC0tAIdAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAfSURBVChTY2Rg+M9ANGCC0sSBUdWYYFQ1JiBFNQMDANePAR1rXdb/AAAAAElFTkSuQmCC);">Control point</li>
+   </ul>
+   <p>
+      Interactive Figure 4 shows the progress of the algorithm during the first three iterations.
+      Here follows a detailed explanation of what's happening mathematically in the single steps.
+      Firstly the formulas for the finite spline case are given.
+      The cubic spline case differs in the steps 2, 4 and 5, these formulas are shown at the end of the section.
+      The Interactive Figure 4 shows only the finite spline case.
+   </p>
+   <h4>
+      Step 1 - Angular data point at the beginning
+   </h4>
+   <p>
+      We use a simple average calculation:
+   </p>
+   <p>
+      <object data="IcLibDemo/Formula_C01.svg"></object>
+   </p>
+   <h4>
+      Step 2 - Smooth transition (finite splines)
+   </h4>
+   <p>
+      First we calculate the vectors <i>m</i> and <i>n</i>:
+   </p>
+   <p>
+      <object data="IcLibDemo/Formula_C02.svg"></object>
+   </p>
+   <p>
+      <object data="IcLibDemo/Formula_C03.svg"></object>
+   </p>
+   <p>
+      In the next step we calculate the slope <i>s</i> of the tangent.
+   </p>
+   <p>
+      <object data="IcLibDemo/Formula_C04.svg"></object>
+   </p>
+   <p>
+      <object data="IcLibDemo/Formula_C05.svg"></object>
+   </p>
+   <p>
+      An important feature of the finite splines is the differentiation between internal and external data points.
+      An external data point forms a tip or a valley, while an internal data point doesn't.
+      The condition in the above formula seperates the two cases.
+      In this step we have to deal with an internal data point, this means that the first part of the conditionalized formula applies.
+   </p>
+   <p>
+      Now we take a tangent to point <i>D</i> with the slope <i>s</i>.
+      The intersections of the tangent with the lines <i>c</i> and <i>e</i> are the vertical positions we are looking for.
+   </p>
+   <p>
+      <object data="IcLibDemo/Formula_C06.svg"></object>
+   </p>
+   <p>
+      <object data="IcLibDemo/Formula_C07.svg"></object>
+   </p>
+   <h4>
+      Step 3 - Angular transition
+   </h4>
+   <p>
+      In this case we calculate averages according to the following formulas:
+   </p>
+   <p>
+      <object data="IcLibDemo/Formula_C08.svg"></object>
+   </p>
+   <p>
+      <object data="IcLibDemo/Formula_C09.svg"></object>
+   </p>
+   <h4>
+      Step 4 - Smooth transition (finite splines)
+   </h4>
+   <p>
+      We apply the same formulas as in step 2.
+      But now we have to deal with an external data point (a valley).
+      This means that the resulting slope s is zero (the second part of the condition is true).
+   </p>
+   <h4>
+      Step 5 - Smooth data point at the end (finite splines)
+   </h4>
+   <p>
+      In this case we simply say:
+   </p>
+   <p>
+      <object data="IcLibDemo/Formula_C10.svg"></object>
+   </p>
+   <h4>
+      Steps 2 and 4 - Smooth transitions (cubic splines)
+   </h4>
+   <p>
+      The calculation of the slope in the cubic spline case is different:
+   </p>
+   <p>
+      <object data="IcLibDemo/Formula_C11.svg"></object>
+   </p>
+   <p>
+      <object data="IcLibDemo/Formula_C12.svg"></object>
+   </p>
+   <p>
+      As you can see there is no differentiation between internal and external data points here.
+   </p>
+   <h4>
+      Step 5 - Smooth data point at the end (cubic splines)
+   </h4>
+   <p>
+      Cubic splines don't support smooth data point at the end (and at the beginning).
+      This means that the angular definitions don't have any effect, so the following formula is applied in any case:
+   </p>
+   <p>
+      <object data="IcLibDemo/Formula_C13.svg"></object>
+   </p>
+   <h3>
+      The DeCasteljau Algorithm
+   </h3>
+   <p>
+      Once the control points are defined, the interpolation curve is ready to use.
+      Now we can calculate an <i>y</i> value for any <i>x</i> value on the abscissa, as long as a curve segment is present at the corresponding horizontal position.
+      The formula used for this purpose is based on the DeCasteljau algorithm.
+      Interactive Figure 5 shows how this algorithm works (click and drag with the mouse to change the variable <i>x</i>).
+   </p>
+   <p>
+      <figure>
+         <object data="IcLibDemo/DeCasteljau_Algorithm.svg" title="DeCasteljau algorithm"></object>
+         <figcaption>
+            Interactive Fig. 5: DeCasteljau algorithm
+            <noscript style="color:red;"><br />The Interactive Figure requires JavaScript!</noscript>
+         </figcaption>
+      </figure>
+   </p>
+   <p>
+      The geometrical construction of the searched point in dependence on a variable <i>x</i> proceeds as follows:
+      <ul>
+         <li>The four control points <i>A</i>, <i>B</i>, <i>C</i> and <i>D</i> are connected with lines, creating three segments (black)</li>
+         <li>The variable <i>x</i> is mapped to each of the three segments, resulting in three points (red)</li>
+         <li>The three newly created points are connected with lines, creating two segments (red)</li>
+         <li>The variable <i>x</i> is mapped to each of the two segments, resulting in two points (green)</li>
+         <li>The two newly created points are connected with a line (green)</li>
+         <li>The variable <i>x</i> is mapped to this line (blue), this is the final result</li>
+      </ul>
+   </p>
+   <p>
+      This construction can be expressed algebraically:
+   </p>
+   <p style="overflow-x:auto;">
+      <object data="IcLibDemo/Formula_D01.svg"></object>
+   </p>
+   <p>
+      Now we simplify to the already known cubic polynom:
+   </p>
+   <p>
+      <object data="IcLibDemo/Formula_D02.svg"></object>
+   </p>
+   <p>
+      For efficiency reasons we can use the corresponding Horner scheme:
+   </p>
+   <p>
+      <object data="IcLibDemo/Formula_D03.svg"></object>
+   </p>
+   <h2 id="Usage Examples">
+      Usage Examples
+   </h2>
+   <h3>
+      Color Gradient
+   </h3>
+   <p>
+      My software <a href="http://www.uniograph.com">UnioGraph</a> uses color gradients with either line segment or finite spline interpolation as desired.
+   </p>
+   <p>
+      <figure style="float: left;">
+         <img src="IcLibDemo/Line_Segment_Interpolation.png" width="300" height="300" title="Line segment interpolation" />
+         <figcaption>Fig. 13: Line segment interpolation</figcaption>
+      </figure>
+      <figure>
+         <img src="IcLibDemo/Finite_Spline_Interpolation.png" width="300" height="300" title="Finite spline interpolation" />
+         <figcaption>Fig. 14: Finite spline interpolation</figcaption>
+      </figure>
+   </p>
+   <h3>
+      Image Gradation
+   </h3>
+   <p>
+      My project <a href="https://amaurer1.github.io/HspGradator/">HspGradator</a> demonstrates the presented interpolation techniques for image gradation.
+   </p>
+   <h2 id="Project">
+      Project
+   </h2>
+   <p>
+      The <b>IcLibDemo</b> project was created with Visual Studio Community 2019 using Visual C++ and MFC.
+      Its purpose is the demonstration of the different interpolation techniques.
+   </p>
+   <h3>
+      Libraries
+   </h3>
+   <p>
+      The <b>IcLibDemo</b> project introduces the C++ template libraries <b>Point.h</b> and <b>InterpolationCurve.h</b>.
+   </p>
+   <p>
+      <b>Point.h</b> contains the generic data structure <b>TPoint</b> and user defined operators for arithmetic operation with this type.
+   </p>
+   <p>
+      <b>InterpolationCurve.h</b> contains the generic data structures <b>TDataPoint</b> and <b>TInterpolationCurve</b>.
+      <b>TDataPoint</b> is inherited from <b>TPoint</b> and <b>TInterpolationCurve</b> is inherited from <b>std::vector&lt;TDataPoint&gt;</b>.
+      The template must be instantiated with a floating point type.
+   </p>
+   <p>
+      In the <b>IcLibDemo</b> project the <b>TInterpolationCurve</b> class is instantiated with the data type <b>double</b>.
+   </p>
+   <h3>
+      Handling
+   </h3>
+   <p>
+      <figure>
+         <img src="IcLibDemo/IcLibDemo.png" title="IcLibDemo" />
+         <figcaption>Fig. 15: IcLibDemo</figcaption>
+      </figure>
+   </p>
+   <ul>
+      <li>Right mouse click in the empty area adds a data point</li>
+      <li>Right mouse click on a data point removes it</li>
+      <li>Left mouse click on a data point and subsequent dragging moves the data point</li>
+      <li>Ctrl + mouse wheel alters the iteration count</li>
+      <li>Ctrl + left mouse click on a data point switches between angular and smooth transition</li>
+      <li>Save the image as SVG file with menu command File->Save Image As...</li>
+      <li>The Curve Type menu lets you choose the curve type</li>
+      <li>The View menu controls the visibility of the grid, the data points, the control points, the labels and the curve</li>
+      <li>Data points with smooth transitions are displayed in red, those with angular transitions are displayed in green</li>
+      <li>Control points are displayed in blue</li>
+   </ul>
+   <h3>
+      Download
+   </h3>
+   <p>
+      <a href="IcLibDemo/IcLibDemo.exe">Download <b>IcLibDemo</b></a> (64-Bit executable file)
+   </p>
+   <h3>
+      GitHub
+   </h3>
+   <p>
+      <a href="https://github.com/amaurer1/IcLibDemo">View project on GitHub</a>
+   </p>
+   <h3>
+      License
+   </h3>
+   <p>
+      <b>IcLibDemo</b> is distributed under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT software license</a>.
+   </p>
+   <h3>
+      Literature
+   </h3>
+   <ul>
+      <li>Robert Sedgewick: <i>Algorithmen in C++</i>, 1. Auflage, Addison-Wesley, 1992, ISBN 3-89319-462-2. p. 621-625.</li>
+   </ul>
+   <hr />
+   <p>
+      Copyright © 2020 by Adrian Maurer. All Rights reserved.
+   </p>
+</body>
+</html>
