@@ -12,7 +12,7 @@
    <p>
       Interpolation is the determination of a mathematical function which passes through a set of given data points.
       This function can be used to calculate the intermediate values between the data points.
-      Frequently used interpolation curves types like line segments or cubic splines are supplemented here by a new type: <b>the finite splines</b>.
+      Frequently used interpolation curve types like line segments or cubic splines are supplemented here by a new type: <b>the finite splines</b>.
       In the mathematical section, I will show an iterative algorithm which specifies the coefficients of the curves, as well as the formula for the calculation of the function value.
       These algorithms are available in a library.
       The usage of this library is demonstrated in the open source project IcLibDemo which is hosted on GitHub.
@@ -166,9 +166,9 @@
          </figcaption>
       </figure>
    </p>
-   <p>
-      Now we simplify the parametric function to an explicit function by omitting the first part:
-   </p>
+	<p>
+		The parametric function is simplified to an explicit function by omitting the first part:
+	</p>
    <p>
       <object data="IcLibDemo/Formula_B02.svg"></object>
    </p>
@@ -185,11 +185,11 @@
          </figcaption>
       </figure>
    </p>
-   <p>
-      Finally we want to be able to set the explicit Bézier function above any range of the x axis, as long as <i>dx > ax</i>.
-      For that purpose we have to map the variable <i>x</i> into the range defined by the first and the last control point.
-      The following modulation is applied to the variable <i>x</i> before it's used in the explicit Bézier function:
-   </p>
+	<p>
+		Finally we want to be able to set the explicit Bézier function above any range of the x axis, as long as <i>dx > ax</i>.
+		For that purpose the variable <i>x</i> is mapped into the range defined by the first and the last control point.
+		The following modulation is applied to the variable <i>x</i> before it's used in the explicit Bézier function:
+	</p>
    <p>
       <object data="IcLibDemo/Formula_B03.svg"></object>
    </p>
@@ -211,15 +211,15 @@
       Control Point Initialization
    </h3>
    <p>
-      First of all, we have to create the necessary number of curve segments and pre-initialize their control points.
+      First of all, we have to create the necessary number of curve segments and initialize their control points.
       The outer control points correspond to the data points, while the inner control points are equally distributed among them.
       This starting position equals the line segment interpolation.
       At this stage, the outer control points and the horizontal positions of the inner control points are already definitively fixed.
    </p>
-   <p>
-      If we want smooth transitions, we have to set the vertical positions of the inner control points, so they form tangents at the respective data point transitions.
-      This is the task of the iterative adaption algorithm (Interactive Figure 4).
-   </p>
+	<p>
+		If smooth transitions are desired, the vertical positions of the inner control points have to be defined so they form tangents at the respective data point transitions.
+		This is the task of the iterative adaption algorithm (Interactive Figure 4).
+	</p>
    <p>
       <figure>
          <object data="IcLibDemo/Iterative_Adaption_Algorithm.svg" title="Iterative adaption algorithm"></object>
@@ -244,27 +244,27 @@
    <h4>
       Step 1 - Angular data point at the beginning
    </h4>
-   <p>
-      We use a simple average calculation:
-   </p>
+	<p>
+		A simple average calculation is apllied:
+	</p>
    <p>
       <object data="IcLibDemo/Formula_C01.svg"></object>
    </p>
    <h4>
       Step 2 - Smooth transition (finite splines)
    </h4>
-   <p>
-      First we calculate the vectors <i>m</i> and <i>n</i>:
-   </p>
+	<p>
+		First the vectors <i>m</i> and <i>n</i> are calculated:
+	</p>
    <p>
       <object data="IcLibDemo/Formula_C02.svg"></object>
    </p>
    <p>
       <object data="IcLibDemo/Formula_C03.svg"></object>
    </p>
-   <p>
-      In the next step we calculate the slope <i>s</i> of the tangent.
-   </p>
+	<p>
+		In the next step the slope <i>s</i> of the tangent is calculated.
+	</p>
    <p>
       <object data="IcLibDemo/Formula_C04.svg"></object>
    </p>
@@ -275,12 +275,12 @@
       An important feature of the finite splines is the differentiation between internal and external data points.
       An external data point forms a tip or a valley, while an internal data point doesn't.
       The condition in the above formula seperates the two cases.
-      In this step we have to deal with an internal data point, this means that the first part of the conditionalized formula applies.
+      In this step we have to deal with an internal data point, this means that the first part of the conditionalized formula is applied.
    </p>
-   <p>
-      Now we take a tangent to point <i>D</i> with the slope <i>s</i>.
-      The intersections of the tangent with the lines <i>c</i> and <i>e</i> are the vertical positions we are looking for.
-   </p>
+	<p>
+		Now a tangent at the point <i>D</i> with the slope <i>s</i> is created .
+		The intersections of the tangent with the lines <i>c</i> and <i>e</i> are the vertical positions we are looking for.
+	</p>
    <p>
       <object data="IcLibDemo/Formula_C06.svg"></object>
    </p>
@@ -290,9 +290,9 @@
    <h4>
       Step 3 - Angular transition
    </h4>
-   <p>
-      In this case we calculate averages according to the following formulas:
-   </p>
+	<p>
+		In this case the following average calculations are applied:
+	</p>
    <p>
       <object data="IcLibDemo/Formula_C08.svg"></object>
    </p>
@@ -302,16 +302,16 @@
    <h4>
       Step 4 - Smooth transition (finite splines)
    </h4>
-   <p>
-      We apply the same formulas as in step 2.
-      But now we have to deal with an external data point (a valley).
-      This means that the resulting slope s is zero (the second part of the condition is true).
-   </p>
+	<p>
+		the same formulas as in step 2 are applied.
+		But now we have to deal with an external data point (a valley).
+		This means that the resulting slope s is always zero (the second part of the condition is true).
+	</p>
    <h4>
       Step 5 - Smooth data point at the end (finite splines)
    </h4>
    <p>
-      In this case we simply say:
+      In this case we apply:
    </p>
    <p>
       <object data="IcLibDemo/Formula_C10.svg"></object>
@@ -329,7 +329,7 @@
       <object data="IcLibDemo/Formula_C12.svg"></object>
    </p>
    <p>
-      As you can see there is no differentiation between internal and external data points here.
+      There is no differentiation between internal and external data points here.
    </p>
    <h4>
       Step 5 - Smooth data point at the end (cubic splines)
@@ -376,14 +376,14 @@
    <p style="overflow-x:auto;">
       <object data="IcLibDemo/Formula_D01.svg"></object>
    </p>
-   <p>
-      Now we simplify to the already known cubic polynom:
-   </p>
+	<p>
+		This expression is simplified to the already known cubic polynom:
+	</p>
    <p>
       <object data="IcLibDemo/Formula_D02.svg"></object>
    </p>
    <p>
-      For efficiency reasons we can use the corresponding Horner scheme:
+      To speed up the calculation the corresponding Horner scheme can be used:
    </p>
    <p>
       <object data="IcLibDemo/Formula_D03.svg"></object>
@@ -455,7 +455,7 @@
       <li>Ctrl + mouse wheel alters the iteration count</li>
       <li>Ctrl + left mouse click on a data point switches between angular and smooth transition</li>
       <li>Save the image as SVG file with menu command File > Save Image As...</li>
-      <li>The Curve Type menu lets you choose the curve type</li>
+      <li>The Curve Type menu enables the selection of the curve type</li>
       <li>The View menu controls the visibility of the grid, the data points, the control points, the labels and the curve</li>
       <li>Data points with smooth transitions are displayed in red, those with angular transitions are displayed in green</li>
       <li>Control points are displayed in blue</li>
@@ -486,7 +486,7 @@
    </ul>
    <hr />
    <p>
-      Copyright © 2022 by Adrian Maurer. All Rights reserved.
+      Copyright © 2024 by Adrian Maurer. All Rights reserved.
    </p>
 </body>
 </html>
